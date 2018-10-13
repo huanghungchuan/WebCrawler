@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.how2java.mapper.OrigithubMapper">
+
+	<select id="get" parameterType="_int" resultType="Origithub">
+		select * from
+		ori_github where id= #{id}
+	</select>
+
+	<select id="list" resultType="Origithub">
+		select * from ori_github where flag ='0'
+	</select>
+
+	<!--增 -->
+	<insert id="add" parameterType="Origithub">
+		insert into ori_github
+		( github ,
+		protype )
+		values
+		( #{github} , #{protype})
+	</insert>
+
+	<!--删 -->
+	<delete id="delete" parameterType="Origithub">
+		delete from ori_github where 1=1
+		<if test="id != null and id != '' ">
+			and id= #{id}
+		</if>
+
+		<if test="github != null and github != '' ">
+			and github = #{github}
+		</if>
+		<if test="protype != null and protype != '' ">
+			and protype = #{protype}
+		</if>
+		<if test="datetimestart != null and datetimestart != '' ">
+			and datetime <![CDATA[ >= ]]>
+			unix_timestamp(#{datetimestart})
+		</if>
+		<if test="datetimeend != null and datetimeend != '' ">
+			and datetime  <![CDATA[ <= ]]>
+			unix_timestamp( #{datetimeend})
+		</if>
+	</delete>
+	<!--查 -->
+	<select id="getGitListByOrigitModel" parameterType="Origithub"
+		resultType="Origithub">
+		select * from ori_github where 1=1
+		<if test="id != null and id != '' ">
+			and id= #{id}
+		</if>
+
+		<if test="github != null and github != '' ">
+			and github = #{github}
+		</if>
+		<if test="protype != null and protype != '' ">
+			and protype = #{protype}
+		</if>
+		<if test="datetimestart != null and datetimestart != '' ">
+			and datetime <![CDATA[ >= ]]>
+			unix_timestamp(#{datetimestart})
+		</if>
+		<if test="datetimeend != null and datetimeend != '' ">
+			and datetime  <![CDATA[ <= ]]>
+			unix_timestamp( #{datetimeend})
+		</if>
+		<if test="getdata != null and getdata != '' ">
+			and getdata = #{getdata}
+		</if>
+		<if test="gitdepurl != null and gitdepurl != '' ">
+			and gitdepurl = #{gitdepurl}
+		</if>
+
+	</select>
+
+	<!--改 -->
+	<update id="update" parameterType="Origithub">
+		update ori_github
+		set
+		<if test="github != null and github != '' ">
+			github = #{github},
+		</if>
+		<if test="protype != null and protype != '' ">
+			protype = #{protype},
+		</if>
+		<if test="getdata != null and getdata != '' ">
+			getdata = #{getdata},
+		</if>
+		<if test="gitdepurl != null ">
+			 gitdepurl = #{gitdepurl},
+		</if>
+		<if test="flag != null and flag != ''  ">
+			flag = #{flag},
+		</if>
+		datetime = CURRENT_TIMESTAMP()
+		where id=#{id}
+	</update>
+	<update id="updateUrl" parameterType="Origithub">
+		update ori_github
+		set
+		<if test="getdata != null and getdata != '' ">
+			getdata = #{getdata},
+		</if>
+		<if test="gitdepurl != null  ">
+			gitdepurl = #{gitdepurl},
+		</if>
+		<if test="flag != null  and flag != '' ">
+			flag = #{flag},
+		</if>
+		datetime = CURRENT_TIMESTAMP()
+		where id=#{id}
+	</update>
+
+
+
+
+
+
+</mapper>
+

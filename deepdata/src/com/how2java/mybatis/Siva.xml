@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.how2java.mapper.SivaMapper">	    
+	    <select id="get" parameterType="_int" resultType="SivaModel">
+	        select id , siva  from   siva where sfwz='1'
+	    </select>
+
+	    <update id="update"  parameterType="SivaModel" >
+	        update siva set sfwz = '0'   where id=#{id}    
+	    </update>
+	    
+	    <select id="getSiva" parameterType="SivaModel" resultType="SivaModel">
+	        select count(*) as num from sivafile where sivafile =#{sivafile} 
+	    </select>
+	    
+	    <select id="getList" parameterType="_int" resultType="SivaModel">
+	        select URL  from   siva where sfwz='0' order by id
+	    </select>
+	    
+	    <select id="insertSivaFile" parameterType="_int" resultType="SivaModel">
+	       insert into sivafile  (sivafile) values (#{sivafile})
+	    </select>
+	    
+	    
+	</mapper>

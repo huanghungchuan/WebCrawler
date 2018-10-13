@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.how2java.mapper.OrideftypeMapper">
+	<!-- 类别数据来自第二步数据 ori_utype中且不存在与ori_deftype中-->
+		<insert id="init_insert" parameterType="Orideftype" >
+		<!-- insert into siva (
+			URL,
+		    SIVA,
+		    FILE_COUNT,
+		    LANGS,
+		    LANGS_BYTE_COUNT,
+		    LANGS_LINES_COUNT,
+		    LANGS_FILE_COUNT,
+		    COMMIT_COUNT,
+		    BRANCHES_COUNT,
+		    FORK_COUNT,
+		    EMPTY_LINES_COUNT,
+		    CODE_LINES_COUNT,
+		    COMMENT_LINES_COUNT,
+		    LICENSE
+	    ) values
+	    (
+	    	#{URL},
+		    #{SIVA},
+		    #{FILE_COUNT},
+		    #{LANGS},
+		    #{LANGS_BYTE_COUNT},
+		    #{LANGS_LINES_COUNT},
+		    #{LANGS_FILE_COUNT},
+		    #{COMMIT_COUNT},
+		    #{BRANCHES_COUNT},
+		    #{FORK_COUNT},
+		    #{EMPTY_LINES_COUNT},
+		    #{CODE_LINES_COUNT},
+		    #{COMMENT_LINES_COUNT},
+		    #{LICENSE }    
+	    )	     -->
+	    insert into sivafile (SIVAFILE ) values (#{SIVA } )	    
+	    
+	    </insert>
+	    <insert id="add" parameterType="Orideftype" >
+	        insert into ori_deftype
+	        	(deftype, dlevel )
+	         values 
+	          	(#{deftype}, #{dlevel})    
+	    </insert>
+	    
+	    <delete id="delete" parameterType="Orideftype" >
+	        delete from ori_deftype where id= #{id}   
+	    </delete>
+	    
+	    <select id="get" parameterType="_int" resultType="Orideftype">
+	        select * from   ori_deftype  where id= #{id}    
+	    </select>
+
+	    <update id="update"  parameterType="Orideftype" >
+	        update ori_deftype
+	        	 set deftype   = #{deftype},
+	        	 	 dlevel  = #{dlevel} 	 
+	        where id=#{id}    
+	    </update>
+	    <select id="list" resultType="Orideftype">
+	        select deftype,id from   ori_deftype      
+	    </select>	
+	    
+	    <select id="defTypeList" resultType="Orideftype">
+	        SELECT
+				deftype,
+				dlevel
+			FROM
+				ori_utype t
+			WHERE
+				deftype != ''
+				and sfsc='0'
+			AND NOT EXISTS (
+				SELECT
+					1
+				FROM
+					ori_deftype
+				WHERE
+					DEFTYPE = t.DEFTYPE
+			)
+	    </select>
+	      
+	    <select id="getDouData" parameterType="Orideftype" resultType="Orideftype">
+	        select id from  ori_deftype  where id != #{id} and deftype=#{deftype}
+	    </select>
+	    
+	</mapper>

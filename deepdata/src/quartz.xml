@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+     http://www.springframework.org/schema/context    
+     http://www.springframework.org/schema/context/spring-context-2.5.xsd 
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop-2.5.xsd 
+     http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+     
+        <!-- 1.要调用的工作类 -->
+        <bean id="quartzJob" class="com.how2java.controller.GetDeepInfoProcess"></bean>
+        
+        
+        <!-- 2.定义调用对象和调用对象的方法 -->
+        <!-- 2.1 获取github项目 -->
+        <bean id="jobtask1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/><!-- 1.要调用的工作类 -->
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>getGithub</value>
+            </property>
+        </bean>
+        <!-- 2.2 获取github项目检测链接 -->
+        <bean id="jobtask2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/><!-- 1.要调用的工作类 -->
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>getDeepUrlByGit</value>
+            </property>
+        </bean>
+        <!-- 2.3 获取项目缺陷链接 -->
+        <bean id="jobtask3" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/><!-- 1.要调用的工作类 -->
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>getDefLink</value>
+            </property>
+        </bean>
+        <!-- 2.4 获取项目缺陷信息 -->
+        <bean id="jobtask4" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/><!-- 1.要调用的工作类 -->
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>getDefInfoByLink</value>
+            </property>
+        </bean>
+        <!-- 2.5 删除部分7天前数据 -->
+        <bean id="jobtask5" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+            <!-- 调用的类 -->
+            <property name="targetObject">
+                <ref bean="quartzJob"/><!-- 1.要调用的工作类 -->
+            </property>
+            <!-- 调用类中的方法 -->
+            <property name="targetMethod">
+                <value>deleteDeepdata</value>
+            </property>
+        </bean>
+        
+        
+        <!-- 3.定义触发时间 -->
+        <!-- 3.1 获取github项目 -->
+        <bean id="doTime1" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="jobtask1"/><!-- 2.定义调用对象和调用对象的方法 -->
+            </property>
+            <property name="cronExpression">
+                <value>0 0 1 * * ?</value>
+            </property>
+        </bean>
+        <!-- 3.2 获取github项目 -->
+        <bean id="doTime2" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="jobtask2"/><!-- 2.定义调用对象和调用对象的方法 -->
+            </property>
+            <property name="cronExpression">
+                <value>0 0 0 * * ?</value>
+            </property>
+        </bean>
+        <!-- 3.3 获取github项目 -->
+        <bean id="doTime3" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="jobtask3"/><!-- 2.定义调用对象和调用对象的方法 -->
+            </property>
+            <property name="cronExpression">
+                <value>0 0 0 * * ?</value>
+            </property>
+        </bean>
+        <!-- 3.4 获取github项目 -->
+        <bean id="doTime4" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="jobtask4"/><!-- 2.定义调用对象和调用对象的方法 -->
+            </property>
+            <property name="cronExpression">
+                <value>0 0 0 * * ?</value>
+            </property>
+        </bean>
+         <!-- 3.4 删除部分7天前数据 -->
+        <bean id="doTime5" class="org.springframework.scheduling.quartz.CronTriggerBean">
+            <property name="jobDetail">
+                <ref bean="jobtask5"/><!-- 2.定义调用对象和调用对象的方法 -->
+            </property>
+            <property name="cronExpression">
+                <value>0 0 1 * * ?</value>
+            </property>
+        </bean>
+        
+        <!-- 4.总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+        <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+            <property name="triggers">
+                <list>
+                    <!-- <ref bean="doTime1"/>
+                    <ref bean="doTime2"/>
+                    <ref bean="doTime3"/>
+                    <ref bean="doTime4"/>
+                    <ref bean="doTime5"/> -->
+                </list>
+            </property>
+        </bean>
+</beans>
+

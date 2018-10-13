@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.how2java.mapper.OridepdataMapper">
+	    <insert id="add" parameterType="Oridepdata" >
+	        insert into ori_depdata
+	        	(bugdes,	  bugtype,	  link,	  line,	  bugexp,	  buginfo,	  dkey,	  filename,	
+	        	 otherexp,   protype,	  github,	  deflink,	  dlevel , bugerr ,bugcor, pronum, mdvalue)
+	         values 
+	            ( #{bugdes},	  #{bugtype},	  #{link},	  #{line},	  #{bugexp},	  #{buginfo},	  #{dkey},	  #{filename},	
+	        	 #{otherexp},   #{protype},	  #{github},	  #{deflink},	  #{dlevel} ,  #{bugerr} ,#{bugcor} ,#{pronum}, #{mdvalue}) 
+	    </insert>
+	    
+	    <delete id="delete" parameterType="Oridepdata" >
+	        delete from ori_depdata where id= #{id}   
+	    </delete>
+	    
+	    <select id="get" parameterType="_int" resultType="Oridepdata">
+	        select * from   ori_depdata  where id= #{id}    
+	    </select>
+
+	    <update id="update"  parameterType="Oridepdata" >
+	        update ori_depdata
+	        	 set  
+					  bugerr = #{bugerr},
+					  bugcor = #{bugcor},
+					  pronum = #{pronum}
+	        where id=#{id}    
+	    </update>
+	    <select id="list"  parameterType="Oridepdata" resultType="Oridepdata">
+	        select * 
+	        	from   ori_depdata 
+	        where 
+	        	protype='java'
+	        	<if test=" dlevel != null and  dlevel != '' ">
+	        		and dlevel=#{dlevel}  
+	        	</if>
+	        	<if test=" pronum != null and  pronum != '' ">
+	        		and pronum >= #{pronum}  
+	        	</if>
+	        	<if test=" datetimeStart != null and  datetimeStart != '' ">
+	        		and datetime  <![CDATA[ >= ]]> unix_timestamp( #{datetimeStart})
+	        	</if>
+	        	<if test=" datetimeEnd != null and  datetimeEnd != '' ">
+	        		and datetime  <![CDATA[ <= ]]>unix_timestamp( #{datetimeEnd})  
+	        	</if>
+	        	group by bugtype  
+	        		 	order by  pronum desc,bugtype, github 
+	    </select>	  
+	    
+	    <update id="updateDlevel"  parameterType="Oridepdata" >
+		    update ori_depdata
+	  					set DLEVEL = (select DLEVEL from ori_utype where LINK  = DEFLINK ) , 
+	      				github = (select github from ori_utype where LINK  = DEFLINK)
+		    where DLEVEL is NULL
+	    </update>
+	    
+	    <!-- 更新mdvalue --> 
+       <update id="updateMdvalue"  parameterType="Oridepdata" >
+	     	update ori_depdata 
+	      	 	set mdvalue = #{mdvalue}
+	        where id =#{id}
+     	</update> 
+     	
+     	<!-- 得到根据条件list -->
+	    <select id="getListByQuery"  parameterType="Oridepdata" resultType="Oridepdata">
+	        select * 
+	        	from   ori_depdata 
+	        where 
+	        	1 = 1 and  mdvalue IS NULL
+	        	<if test=" protype != null and  protype != '' ">
+	        		and protype=#{protype}
+	        	</if>
+	        	<if test=" dlevel != null and  dlevel != '' ">
+	        		and dlevel=#{dlevel}  
+	        	</if>  
+	    </select>	  
+	      
+	    <select id="getMdListByMdvalue"  parameterType="Oridepdata" resultType="Oridepdata">
+	        select *  from   ori_depdata where mdvalue =#{mdvalue}
+	    </select>
+	      
+	    <delete id="deleteLInfoSeven" parameterType="Oridepdata" >
+	        delete from 
+	         	ori_depdata
+	        where  DATE_SUB(CURDATE(), INTERVAL 7 DAY) > date(datetime)
+	          and  pronum >10
+	          and  dlevel='3'
+	    </delete>  
+	</mapper>
+

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.how2java.mapper.SearchCodeMapper">	    
+	    <select id="get" resultType="SearchCodeModel">
+		     select 
+					id,
+					reponame,
+					scm,
+					gitrepolocation,
+					username,
+					password,
+					repourl,
+					repobranch,
+					xh
+		      from searchcode
+		      
+	    </select>
+
+	    <update id="update"  parameterType="SearchCodeModel" >
+	        update searchcode set 
+					id = #{id },
+					reponame = #{reponame },
+					scmv=#{scmv },
+					gitrepolocation = #{gitrepolocation },
+					username = #{username },
+					password = #{password },
+					repourl = #{repourl },
+					repobranch=#{repobranch },
+					xh=#{xh }
+			where id=#{id}    
+	    </update>
+	    
+	   <delete id="delete" parameterType="SearchCodeModel">
+	      delete from searchcode where id =#{id}
+	   </delete>
+	   
+	    <insert id="add" parameterType="SearchCodeModel" >
+	        insert into searchcode
+	        	(   reponame,
+					scm,
+					gitrepolocation,
+					username,
+					password,
+					repourl,
+					repobranch,
+					xh )
+	         values 
+	          	(   #{reponame},
+					#{scm},
+					#{gitrepolocation},
+					#{username},
+					#{password},
+					#{repourl},
+					#{repobranch},
+					#{xh}
+				)    
+	    </insert>
+	</mapper>
